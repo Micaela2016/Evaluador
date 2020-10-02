@@ -1,0 +1,20 @@
+# depslib dependency file v1.0
+1601590547 source:c:\users\miqao\desktop\universidad\proyectos de sw\organizacion de computadoras\proyectos en c\proyectodec\evaluador.c
+
+1314894556 source:c:\users\miqao\desktop\universidad\proyectos de sw\organizacion de computadoras\proyectos en c\proyectodec\main.c
+	<stdio.h>
+	<stdlib.h>
+
+1601592261 source:c:\users\miqao\desktop\universidad\proyectos de sw\organizacion de computadoras\proyectos en c\proyectodec\mapeo.c
+	<stdlib.h>
+	"mapeo.h"
+
+1601591161 source:c:\users\miqao\desktop\universidad\proyectos de sw\organizacion de computadoras\proyectos en c\proyectodec\lista.c
+	<stdlib.h>
+	"lista.h"
+
+1601590840 c:\users\miqao\desktop\universidad\proyectos de sw\organizacion de computadoras\proyectos en c\proyectodec\lista.h
+
+1601590714 c:\users\miqao\desktop\universidad\proyectos de sw\organizacion de computadoras\proyectos en c\proyectodec\mapeo.h
+	"lista.h"
+
