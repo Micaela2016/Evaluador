@@ -18,3 +18,29 @@
 1601590714 c:\users\miqao\desktop\universidad\proyectos de sw\organizacion de computadoras\proyectos en c\proyectodec\mapeo.h
 	"lista.h"
 
+1601590547 source:c:\users\miqao\documents\github\proyectoc\evaluador.c
+
+1601837448 source:c:\users\miqao\documents\github\proyectoc\lista.c
+	<stdlib.h>
+	<stdio.h>
+	"lista.h"
+
+1601590840 c:\users\miqao\documents\github\proyectoc\lista.h
+
+1314894556 source:c:\users\miqao\documents\github\proyectoc\main.c
+	<stdio.h>
+	<stdlib.h>
+
+1601837537 source:c:\users\miqao\documents\github\proyectoc\mapeo.c
+	<stdlib.h>
+	"mapeo.h"
+	"lista.h"
+
+1601837601 c:\users\miqao\documents\github\proyectoc\mapeo.h
+	"lista.h"
+
+1601837448 c:\users\miqao\documents\github\proyectoc\lista.c
+	<stdlib.h>
+	<stdio.h>
+	"lista.h"
+
