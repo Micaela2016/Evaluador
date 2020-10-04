@@ -120,12 +120,11 @@ tPosicion l_ultima(tLista l){
     tPosicion ultima, retorno;
     retorno= (tPosicion)l;
     ultima= (tPosicion)l->siguiente;
-
     while (ultima->siguiente!=NULL){
         retorno=ultima;
-        ultima= ultima->siguiente
+        ultima= ultima->siguiente;
     }
-    return ultima;
+    return retorno;
 }
 
 /**
