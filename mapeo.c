@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include "mapeo.h"
 #include "lista.h"
+#include "lista.c"
 /**
  Inicializa un mapeo vacío, con capacidad inicial igual al MAX(10, CI).
  Una referencia al mapeo creado es referenciada en *M.
@@ -9,8 +10,16 @@
  Finaliza indicando MAP_ERROR_MEMORIA si no es posible reservar memoria correspondientemente.
 **/
 void crear_mapeo(tMapeo * m, int ci, int (*fHash)(void *), int (*fComparacion)(void *, void *)){
-    (*m)=(tMapeo)malloc(sizeof(struct mapeo));
-
+    if((*m)!=NULL){
+        (*m)=(tMapeo)malloc(sizeof(struct mapeo));
+        (*m)->cantidad_elementos=0;
+        (*m)->longitud_tabla=10;
+         tLista l;
+         crear_lista(&l);
+        (*m)->tabla_hash=(&l);
+        }
+    else
+        exit(MAP_ERROR_MEMORIA);
 }
 
 /**
