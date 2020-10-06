@@ -23,10 +23,10 @@ void crear_lista(tLista * l){
  Finaliza indicando LST_ERROR_MEMORIA si no es posible reservar memoria correspondientemente.
 
  Situaciones:
- -Si la lista no fue creada previamente entonces debe abortar la ejecucion (PREGUNTAR)
  -Si la posicion pasada por parametro no existe entpnces debe abortar la ejecucion.
  -Si fue posible reservar memoria entonces debe insertar el elemento. (PREGUNTAR QUE PASA EN EL CASO DE INSERCION DEL PRIMER ELEMENTO.
  -Si no fue posible reservar memoria entonces debe abortar la ejecucion.
+ Observacion: Omitimos chequear si la lista no fue creada previamente
 **/
 
 void l_insertar(tLista l, tPosicion p, tElemento e){
@@ -61,6 +61,24 @@ void l_eliminar(tLista l, tPosicion p, void (*fEliminar)(tElemento)){
     }
     else exit (LST_POSICION_INVALIDA);
 }
+/**
+ Procedimiento auxiliar recursivo para destruir todos los los elementos de la lista.
+ Caso base:
+    Si tengo un solo elemento en la lista, Eliminar ese elemento de la lista y tambien su posicion.
+ Caso recursivo:
+    Si tengo mas de un solo elemento en la lista entonces:
+        Debo eliminar el elemento de la lista y su posicion.
+
+**/
+static void destruirAux(void (*fEliminar)(tElemento),tPosicion pos){
+    if(pos->siguiente!=NULL)
+        destruirAux(fEliminar, pos->siguiente);
+
+    fEliminar(pos->elemento);
+    pos->elemento = NULL;
+    free(pos);
+}
+
 
 /**
  Destruye la lista L, elimininando cada una de sus celdas.
@@ -68,6 +86,16 @@ void l_eliminar(tLista l, tPosicion p, void (*fEliminar)(tElemento)){
 **/
 void l_destruir(tLista * l, void (*fEliminar)(tElemento)){
 
+    tPosicion pos = *l;                         //Primera posicion
+
+    if(pos->siguiente!=NULL){
+        destruirAux(fEliminar, pos->siguiente);
+    }
+
+    pos->siguiente = NULL;                      //Elimina celda de encabezamiento.
+    pos->elemento = NULL;
+    free(pos);
+    *l = NULL;                                  //Destruye lista
 }
 
  /**

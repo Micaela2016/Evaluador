@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include "mapeo.h"
 #include "lista.h"
-#include "lista.c"
 /**
  Inicializa un mapeo vacío, con capacidad inicial igual al MAX(10, CI).
  Una referencia al mapeo creado es referenciada en *M.

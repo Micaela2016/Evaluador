@@ -11,10 +11,29 @@ void salir(FILE *fp){
     exit(0);
 }
 
+//Funciones auxiliares de lista
+void fEliminar(tElemento e){
+    free(e);
+    e = NULL;
+}
+
+//Funciones auxiliares de mapeo
+void fEliminarC (void* clave){
+    tClave c= (tClave) clave;
+    free(c);
+    c= NULL;
+}
+
+void fEliminarV(void* valor){
+    tClave v= (tValor) valor;
+    free(v);
+    v= NULL;
+}
+
 
 int main(int argc, char *argv[]){
-    tMapeo map= (tMapeo) malloc (sizeof(struct trie));
-    map= crear_mapeo();
+    tMapeo map= (tMapeo) malloc (sizeof(struct celda));
+    //map= crear_mapeo();
 
     int opcion;
 
