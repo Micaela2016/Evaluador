@@ -4,5 +4,6 @@
 int main()
 {
     printf("main de lista-prueba\n");
+    int opcion=0;
     return 0;
 }
