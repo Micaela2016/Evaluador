@@ -58,6 +58,7 @@ void l_eliminar(tLista l, tPosicion p, void (*fEliminar)(tElemento)){
         elim->siguiente=NULL;
         elim->elemento=NULL;
         free(elim);
+
     }
     else exit (LST_POSICION_INVALIDA);
 }
