@@ -2,11 +2,13 @@
 #include "mapeo.h"
 #include "lista.h"
 
+
+
 /**
- Inicializa un mapeo vacío, con capacidad inicial igual al MAX(10, CI).
+ Inicializa un mapeo vacÃ­o, con capacidad inicial igual al MAX(10, CI).
  Una referencia al mapeo creado es referenciada en *M.
- A todo efecto, el valor hash para las claves será computado mediante la función fHash.
- A todo efecto, la comparación de claves se realizará mediante la función fComparacion.
+ A todo efecto, el valor hash para las claves serÃ¡ computado mediante la funciÃ³n fHash.
+ A todo efecto, la comparaciÃ³n de claves se realizarÃ¡ mediante la funciÃ³n fComparacion.
  Finaliza indicando MAP_ERROR_MEMORIA si no es posible reservar memoria correspondientemente.
 **/
 
@@ -37,11 +39,13 @@ void crear_mapeo(tMapeo * m, int ci, int (*fHash)(void *), int (*fComparacion)(v
 /**
  Inserta una entrada con clave C y valor V, en M.
  Si una entrada con clave C y valor Vi ya existe en M, modifica Vi por V.
- Retorna NULL si la clave C no existía en M, o Vi en caso contrario.
+ Retorna NULL si la clave C no existÃ­a en M, o Vi en caso contrario.
  Finaliza indicando MAP_ERROR_MEMORIA si no es posible reservar memoria correspondientemente.
 **/
 tValor m_insertar(tMapeo m, tClave c, tValor v){
+
     int hashC=m->hash_code(c)%(m->longitud_tabla);
+
     tEntrada * ent;
     (*ent)=(tEntrada)malloc(sizeof(struct entrada));
     (*ent)->clave=&c;
@@ -106,7 +110,9 @@ void m_destruir(tMapeo * m, void (*fEliminarC)(void *), void (*fEliminarV)(void 
  Retorna el valor correspondiente, o NULL en caso contrario.
 **/
 tValor m_recuperar(tMapeo m, tClave c){
+
     int hashC=m->hash_code(c)%(m->longitud_tabla);
+
     tLista laux=tabla[hashC];
     tValor salida=NULL;
 
