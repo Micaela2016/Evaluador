@@ -8,6 +8,8 @@
  A todo efecto, la comparación de claves se realizará mediante la función fComparacion.
  Finaliza indicando MAP_ERROR_MEMORIA si no es posible reservar memoria correspondientemente.
 **/
+typedef void* tabla[10];
+
 void crear_mapeo(tMapeo * m, int ci, int (*fHash)(void *), int (*fComparacion)(void *, void *)){
     if((*m)!=NULL){
         (*m)=(tMapeo)malloc(sizeof(struct mapeo));
