@@ -13,8 +13,8 @@ void salir(FILE *fp){
 
 
 int main(int argc, char *argv[]){
-    tMapeo map= (tMapeo) malloc (sizeof(struct trie));
-    map= crear_mapeo();
+    tMapeo map;
+    map= crear_mapeo(map,10,NULL,NULL);
 
     int opcion;
 
