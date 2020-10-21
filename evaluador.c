@@ -30,6 +30,7 @@ void fEliminarV(void* valor){
     v= NULL;
 }
 
+/**
 void *fComparacion(void* p01,void* p02){
 
     int * pa;
@@ -54,7 +55,7 @@ void *fComparacion(void* p01,void* p02){
     }
     return esigual;
 }
-
+/*
  void *fHash(void* p01){
     int * parr;
     parr= p01;
@@ -69,22 +70,57 @@ void *fComparacion(void* p01,void* p02){
     }
     return  (suma/(pos-1) ) ;
 }
+*/
+
+int fComparacion(void *e1, void *e2){
+   return (strcmp(e1,e2));
+   return (strcmp(e1,e2)==0);
+}
+
+int fHash(void *p){
+
+ return ((int)strlen(p));
+}
+
 
 int main(int argc, char *argv[]){
 
     tMapeo map;
-    crear_mapeo(&map,10,&fComparacion,&fHash);
-
-    int arr01[5]={100,101,0};
-    int *p_c01=arr01;
-    int c02=1;
 
 
-    tClave clave_nueva=p_c01;
-    tValor valor_nuevo=&c02;
-    m_insertar(&map,&clave_nueva,&valor_nuevo);
+
+    //crear_mapeo(&map,10,&fComparacion,&fHash);
+
+    printf("CREAR MAPEO\n");
+    crear_mapeo(&map, 11, &fComparacion, &fHash);
+    printf("El size del mapeo es %i\n", sizeof(*map));
+    printf("Longitud del map es %i\n", (map->longitud_tabla));
+    printf("=================================\n");
 
 
+    printf("VERIFICAR FUNCIONES fComparador y fHash\n");
+    char arr_01[5]={'H','O','L','A','\0'};
+    char arr_02[5]={'H','x','L','A','\0'};//0 igual -1 distinto
+    printf("arreglo 1: %s\n",arr_01);
+    printf("arreglo 2: %s\n",arr_02);
+    printf("Comparador (0 iguales y -1 distintos): %d\n",fComparacion(arr_01,arr_02));
+    printf("t Hash: %d\n",fHash(arr_01));
+    printf("=================================\n");
+
+
+
+    printf("INSERTAR ENTRADAS\n");
+    char * clave1 = "clave";
+    char * clave2 = "hola";
+
+    char * vv1 = "valor1";
+    char * vv2 = "valor2";
+
+    m_insertar(map,clave1,vv1);
+
+    printf("El size del mapeo es %i\n", sizeof(*map));
+    printf("Longitud del map es %i\n", (map->longitud_tabla));
+    printf("=================================\n\n");
 
     //
 printf("============================================ EVALUADOR DE ARCHIVO DE CARACTERES ASCII ==========================================================\n");
@@ -192,7 +228,10 @@ printf("============================================ EVALUADOR DE ARCHIVO DE CAR
         }
         }
     }
+
+
 }
+
 
 
 

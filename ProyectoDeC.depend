@@ -59,14 +59,14 @@
 
 1603285267 c:\users\maxiaguero\desktop\proc\evaluador\lista.h
 
-1603287648 source:c:\users\maxiaguero\desktop\proc\evaluador\evaluador.c
+1603296652 source:c:\users\maxiaguero\desktop\proc\evaluador\evaluador.c
 	<stdio.h>
 	"mapeo.h"
 
 1603285267 c:\users\maxiaguero\desktop\proc\evaluador\mapeo.h
 	"lista.h"
 
-1603285267 source:c:\users\maxiaguero\desktop\proc\evaluador\mapeo.c
+1603287677 source:c:\users\maxiaguero\desktop\proc\evaluador\mapeo.c
 	<stdio.h>
 	"mapeo.h"
 	"lista.h"
