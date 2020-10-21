@@ -54,3 +54,12 @@
 
 1601679865 c:\onedrive\cs\organizacion de computadoras\proyectodec\proyectoc\lista.h
 
+1602114078 source:c:\onedrive\cs\organizacion de computadoras\proyectodec\proyectoc\mapeo.c
+	<stdlib.h>
+	<stdio.h>
+	"mapeo.h"
+	"lista.h"
+
+1601679865 c:\onedrive\cs\organizacion de computadoras\proyectodec\proyectoc\mapeo.h
+	"lista.h"
+
