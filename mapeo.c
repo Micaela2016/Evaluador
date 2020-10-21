@@ -45,7 +45,6 @@ void crear_mapeo(tMapeo * m, int ci, int (*fHash)(void *), int (*fComparacion)(v
 **/
 tValor m_insertar(tMapeo m, tClave c, tValor v){
     //Donde meto MAP:ERROR MEMORIA
-
     tValor salida=NULL;
     int hashC=m->hash_code(c)%(m->longitud_tabla);
 

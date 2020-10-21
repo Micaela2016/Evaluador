@@ -56,7 +56,6 @@ void *fComparacion(void* p01,void* p02){
 }
 
  void *fHash(void* p01){
-
     int * parr;
     parr= p01;
     int suma=0;
@@ -68,15 +67,26 @@ void *fComparacion(void* p01,void* p02){
         suma=suma+primero;
         pos++;
     }
-    int longitud=10; //aca necesito la longitud de la tabla hash no es 10 porque se va modificando si se hace rehash
-    return  (suma/(pos-1) )%longitud ;
+    return  (suma/(pos-1) ) ;
 }
 
 int main(int argc, char *argv[]){
 
     tMapeo map;
-
     crear_mapeo(&map,10,&fComparacion,&fHash);
+
+    int arr01[5]={100,101,0};
+    int *p_c01=arr01;
+    int c02=1;
+
+
+    tClave clave_nueva=p_c01;
+    tValor valor_nuevo=&c02;
+    m_insertar(&map,&clave_nueva,&valor_nuevo);
+
+
+
+    //
 printf("============================================ EVALUADOR DE ARCHIVO DE CARACTERES ASCII ==========================================================\n");
 
     //inicio leer el archivo desde cmd
