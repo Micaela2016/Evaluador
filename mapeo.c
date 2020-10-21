@@ -1,9 +1,9 @@
-#include <stdlib.h>
+//#include <stdlib.h>
 #include <stdio.h>
 
 #include "mapeo.h"
 #include "lista.h"
-
+volatile int tamanio_thash=10;
 void fEliminar(tElemento);
 void m_destruirAux(tMapeo m,void (*fEliminarC)(void *), void (*fEliminarV)(void *));
 /**
@@ -103,6 +103,8 @@ tValor m_insertar(tMapeo m, tClave c, tValor v){
             l_insertar(laux,l_fin(*(m->tabla_hash)),eaux);
             tabla[hc]=aux[h];
        }
+    tamanio_thash=m->longitud_tabla;
+
     }
     return salida;
 }
@@ -183,6 +185,6 @@ extern tValor m_recuperar(tMapeo m, tClave c){
 }
 
 //hago esta funcion aunque no hace nd por parametro
-extern void fEliminar(tElemento e){
+//extern void fEliminar(tElemento e){
 
-}
+//}
