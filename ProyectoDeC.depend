@@ -47,8 +47,7 @@
 	<stdio.h>
 	"lista.h"
 
-1602110383 source:c:\onedrive\cs\organizacion de computadoras\proyectodec\proyectoc\lista.c
-	<stdlib.h>
+1603248968 source:c:\onedrive\cs\organizacion de computadoras\proyectodec\proyectoc\lista.c
 	<stdio.h>
 	"lista.h"
 
@@ -68,6 +67,18 @@
 	"lista.h"
 
 1603247013 source:c:\users\maxiaguero\desktop\proc\evaluador\mapeo.c
+	<stdio.h>
+	"mapeo.h"
+	"lista.h"
+
+1603248968 source:c:\onedrive\cs\organizacion de computadoras\proyectodec\proyectoc\evaluador.c
+	<stdio.h>
+	"mapeo.h"
+
+1601679865 c:\onedrive\cs\organizacion de computadoras\proyectodec\proyectoc\mapeo.h
+	"lista.h"
+
+1603248968 source:c:\onedrive\cs\organizacion de computadoras\proyectodec\proyectoc\mapeo.c
 	<stdio.h>
 	"mapeo.h"
 	"lista.h"
