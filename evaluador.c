@@ -69,7 +69,7 @@ void *fComparacion(void* p01,void* p02){
         pos++;
     }
     int longitud=10; //aca necesito la longitud de la tabla hash no es 10 porque se va modificando si se hace rehash
-    return  (suma/(pos-1) )/longitud ;
+    return  (suma/(pos-1) )%longitud ;
 }
 
 int main(int argc, char *argv[]){
@@ -77,15 +77,41 @@ int main(int argc, char *argv[]){
     tMapeo map;
 
     crear_mapeo(&map,10,&fComparacion,&fHash);
-    //map= crear_mapeo(map,10,NULL,NULL);
+printf("============================================ EVALUADOR DE ARCHIVO DE CARACTERES ASCII ==========================================================\n");
 
-    //tMapeo map= (tMapeo) malloc (sizeof(struct celda));
-    //map= crear_mapeo();
+    //inicio leer el archivo desde cmd
+    if(argc==2)
+    {
+        char* archivo_nombre = argv[1];
+        FILE* archivo_ascii;
+        if((archivo_ascii= fopen(archivo_nombre,"r"))==NULL)
+        {
+
+            printf ("El archivo es archivo invalido.\n"); //Abro el archivo en modo lectura
+            return 0;
+        }
+        else
+        {
+            //en archivo_ascii tengo un puntero a un archivo leido por consola
+            //lo leido es el nombre del archivo.
+            printf("s\n",archivo_ascii); //archivo_ascii
+
+        }
+
+    }
+    else
+    {
+        printf ("Hay error en el numero de argumentos\n");
+        return 1;
+    }
+
+    //insertar palabras del archivo al mapeo
 
 
-    int opcion;
 
-//asumo que tengo el archivo en un arreglo
+
+
+    //asumo que tengo el archivo en un arreglo
     int palabra_in[250]={104,111,108,97,255,109,117,110,100,111,255,147,114,87,84,0};
 
     int i=0;
@@ -118,22 +144,20 @@ int main(int argc, char *argv[]){
         }
     printf("\n");
 
-//leer la ruta del archivo
-    printf("Ingrese la ruta del archivo seguido de un enter\n");
-    char ruta [20];
-    scanf("%[^\n",ruta);
-    fflush(stdin);
-    //buscar archivo
+
+    //buscar palabra en el archivo
 
     char cadena [250];
     int  salir = 0;
-    opcion=0;
+    int opcion=0;
     while (!salir){
-        printf("Ingrese una opcion\n");
+        printf("========== Ingrese una opcion =============\n");
         printf("1: cantidad de apariciones de una palabra o 2: salir ");
+
         scanf("%d", &opcion);
         fflush(stdin);
         if (opcion == 1|opcion == 2 ){
+            printf("========== =============== =============\n");
             printf("Eligio >>");
             fflush(stdin);
         }
@@ -142,6 +166,8 @@ int main(int argc, char *argv[]){
             printf("opcion 1 \n");
             printf("Ingrese una palabra: ");
             scanf("%[^\n",cadena);
+            //opero con cadena= es un string
+
             fflush(stdin);
             break;
         }
@@ -155,28 +181,10 @@ int main(int argc, char *argv[]){
             printf("La opcion ingresada no es correcta \n");
         }
         }
-
-
-
-
-
-
-
-
-
-
-
+    }
 }
 
 
 
 
 
-
-
-
-
-
-
-
-}
