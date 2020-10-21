@@ -85,21 +85,28 @@ int fHash(void *p){
 
 int main(int argc, char *argv[]){
 
-    tMapeo map;
+    tMapeo mapo;
 
 
+    //crear lista e insertar
+    /**tLista tprueba;
+    crear_lista(&tprueba);
+    int el=5;
+    printf("log: %d\n",l_longitud(tprueba));
+    l_insertar(tprueba, l_primera(tprueba),&el );
+    printf("log: %d\n",l_longitud(tprueba));*/
 
-    //crear_mapeo(&map,10,&fComparacion,&fHash);
+
 
     printf("CREAR MAPEO\n");
-    crear_mapeo(&map, 11, &fComparacion, &fHash);
-    printf("El size del mapeo es %i\n", sizeof(*map));
-    printf("Longitud del map es %i\n", (map->longitud_tabla));
+    crear_mapeo(&mapo, 9, &fComparacion, &fHash);
+    printf("El size del mapeo es %i\n", sizeof(*mapo));
+    printf("Longitud del map es %i\n", (mapo->longitud_tabla));
     printf("=================================\n");
 
 
     printf("VERIFICAR FUNCIONES fComparador y fHash\n");
-    char arr_01[5]={'H','O','L','A','\0'};
+    char arr_01[5]={'c','\0'};
     char arr_02[5]={'H','x','L','A','\0'};//0 igual -1 distinto
     printf("arreglo 1: %s\n",arr_01);
     printf("arreglo 2: %s\n",arr_02);
@@ -110,16 +117,26 @@ int main(int argc, char *argv[]){
 
 
     printf("INSERTAR ENTRADAS\n");
-    char * clave1 = "clave";
-    char * clave2 = "hola";
+    //char clave1 [10]={'c','i','d','\0'};
+    char * clave1 = "cid";
+    char valor1 [10]= {'1','0','\0'};
 
-    char * vv1 = "valor1";
-    char * vv2 = "valor2";
+    tClave c1= clave1;
+    tValor v1= valor1;
 
-    m_insertar(map,clave1,vv1);
+    printf("ENTRADA: ");
+    printf("(clave,valor): (%s",c1);//ver que clave ingresa
+    printf(",%s)\n",v1);
+    m_insertar(mapo,c1,v1);
 
-    printf("El size del mapeo es %i\n", sizeof(*map));
-    printf("Longitud del map es %i\n", (map->longitud_tabla));
+    printf("El size del mapeo es %i\n", sizeof(*mapo));
+    printf("Longitud del map es %i\n", (mapo->longitud_tabla));
+
+
+   // tValor valor10 = m_recuperar(mapo,c1);
+   // printf("valor 1:  %s\n", (char*)(valor10));
+
+   // printf("Cantidad de elementos en map es %i\n", (mapo->cantidad_elementos));
     printf("=================================\n\n");
 
     //

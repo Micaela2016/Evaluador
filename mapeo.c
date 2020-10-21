@@ -45,8 +45,9 @@ void crear_mapeo(tMapeo * m, int ci, int (*fHash)(void *), int (*fComparacion)(v
 **/
 tValor m_insertar(tMapeo m, tClave c, tValor v){
     //Donde meto MAP:ERROR MEMORIA
+    int num_hash=m->hash_code(&c);
+    int hashC=num_hash%(m->longitud_tabla);
     tValor salida=NULL;
-    int hashC=m->hash_code(c)%(m->longitud_tabla);
 
     if(m_recuperar(m,c)!=NULL){
         tPosicion paux=l_primera(tabla[hashC]);
@@ -70,6 +71,34 @@ tValor m_insertar(tMapeo m, tClave c, tValor v){
         tLista lisAux=tabla[hashC];
         l_insertar(lisAux,l_fin(lisAux),(*ent));
         l_insertar(*(m->tabla_hash),l_fin(*(m->tabla_hash)),(*ent));
+
+
+        /**************************************************
+        ******************************************************
+        ******************¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿**********
+        ** No es conveniente que la entrada sea TEntrada ?????***
+        ?????????????????????????????
+        ********************************************************
+        ========================================================
+        tEntrada ent = (tEntrada) malloc(sizeof(struct entrada));
+        if(ent == NULL){
+            exit(MAP_ERROR_MEMORIA);
+        }
+
+        ent->clave = c;
+        ent->valor = v;
+        tLista lisAux=tabla[hashC];
+        l_insertar(lisAux,l_fin(lisAux),(ent));
+
+
+        ¿POR QUE SE ONGRESE DOS COSAS LA LA LISTA?
+
+        =============================================
+
+        */
+
+
+
     }
 
     int sobrecarga=(m->longitud_tabla*75)/100;
@@ -161,23 +190,24 @@ extern void m_destruirAux(tMapeo m,void (*fEliminarC)(void *), void (*fEliminarV
  Retorna el valor correspondiente, o NULL en caso contrario.
 **/
 extern tValor m_recuperar(tMapeo m, tClave c){
-
-    int hashC=m->hash_code(c)%(m->longitud_tabla);
-
-    tLista laux=tabla[hashC];
     tValor salida=NULL;
-
+    int num_hash=m->hash_code(&c);
+    int hashC=num_hash%(m->longitud_tabla);
+    tLista laux=tabla[hashC];
     tEntrada tAux1=l_primera(laux)->elemento;
-    tEntrada taux2=l_fin(laux)->elemento;
-
-    int encontrado=0;
-    while((m->comparador(tAux1->clave,taux2->clave)!= 0 ) &&( encontrado == 0 ) ){
-        if((m->comparador(c,tAux1->clave))==0){
-            encontrado=1;
-            salida=tAux1->valor;
+    if (l_longitud(laux)!=0)
+    {
+        tEntrada taux2=l_fin(laux)->elemento;
+        int encontrado=0;
+        //recupera al alemento igaul a clave
+        while((m->comparador(tAux1->clave,taux2->clave)!= 0 ) &&( encontrado == 0 ) ){
+            if((m->comparador(c,tAux1->clave))==0){
+                encontrado=1;
+                salida=tAux1->valor;
         }
     }
 
+    }
     return salida;
 }
 
