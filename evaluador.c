@@ -127,7 +127,7 @@ int main(int argc, char *argv[]){
     printf("ENTRADA: ");
     printf("(clave,valor): (%s",c1);//ver que clave ingresa
     printf(",%s)\n",v1);
-    m_insertar(mapo,c1,v1);
+    //m_insertar(mapo,c1,v1);
 
     printf("El size del mapeo es %i\n", sizeof(*mapo));
     printf("Longitud del map es %i\n", (mapo->longitud_tabla));
@@ -155,9 +155,95 @@ printf("============================================ EVALUADOR DE ARCHIVO DE CAR
         }
         else
         {
-            //en archivo_ascii tengo un puntero a un archivo leido por consola
-            //lo leido es el nombre del archivo.
-            printf("s\n",archivo_ascii); //archivo_ascii
+
+            printf("%s\n",archivo_ascii);
+
+            if(feof(archivo_ascii))
+            {
+                    printf("El archivo %s esta vacio\n",archivo_ascii);
+            }
+            else
+            {
+                rewind(archivo_ascii);
+                char arr_archivo[250];
+                char *p_archivo;
+                int indic=0;
+                while(!feof(archivo_ascii))
+                {
+                    arr_archivo[indic]=fgetc(archivo_ascii);
+                    indic++;
+
+
+
+                }
+                indic=0;
+                printf("{");
+                  while(arr_archivo[indic]!='\0')
+                {
+
+                    printf("%c ",arr_archivo[indic]);
+                    indic++;
+
+
+
+                }
+                printf("}");
+                printf("\n");
+                printf("================fin contenido==============\n");
+
+
+
+                rewind(archivo_ascii);
+                fclose(archivo_ascii);
+
+
+                /*************CARGAR EN MAPEO LO QUE LEI DEL ARCHIVO***********************/
+                //TENGO UN ARREGLO DE CARCTERES YA CAGADO: arr_archivo
+                //RESTA PASAR LAS PALABRAS AL MAPEO
+
+
+
+                int i=0;
+                int pri=0;
+                //sin punteros recorro el arreglo
+                while(arr_archivo[i]!=0)
+                {
+                    if (arr_archivo[i]==255)
+                        { int sup=i-1;
+                          printf("%i ",pri);
+                          printf("%i \n",sup);
+                          //n-esima palabra
+                          for(int pos=pri;pos<=sup;pos++)
+                            {
+                                printf("%c ",arr_archivo[pos]);
+                            }
+
+                          printf(" \n");
+                          pri=sup+2;
+                          }
+
+                    i++;
+                }
+                //ultima palabra
+                printf("%i ",pri);
+                printf("%i \n",i-1);
+                for(int ult=pri;ult<=i-1;ult++)
+                    {
+                        printf("%c ",arr_archivo[ult]);
+                    }
+                printf("\n");
+
+
+
+
+
+
+                /***************************************/
+
+
+
+
+            }
 
         }
 
@@ -175,37 +261,7 @@ printf("============================================ EVALUADOR DE ARCHIVO DE CAR
 
 
     //asumo que tengo el archivo en un arreglo
-    int palabra_in[250]={104,111,108,97,255,109,117,110,100,111,255,147,114,87,84,0};
 
-    int i=0;
-    int pri=0;
-    //sin punteros recorro el arreglo
-    while(palabra_in[i]!=0)
-    {
-        if (palabra_in[i]==255)
-            { int sup=i-1;
-              printf("%i ",pri);
-              printf("%i \n",sup);
-              //n-esima palabra
-              for(int pos=pri;pos<=sup;pos++)
-                {
-                    printf("%c ",palabra_in[pos]);
-                }
-
-              printf(" \n");
-              pri=sup+2;
-              }
-
-        i++;
-    }
-    //ultima palabra
-    printf("%i ",pri);
-    printf("%i \n",i-1);
-    for(int ult=pri;ult<=i-1;ult++)
-        {
-            printf("%c ",palabra_in[ult]);
-        }
-    printf("\n");
 
 
     //buscar palabra en el archivo
