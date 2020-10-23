@@ -13,28 +13,24 @@ void m_destruirAux(tMapeo m,void (*fEliminarC)(void *), void (*fEliminarV)(void 
  Finaliza indicando MAP_ERROR_MEMORIA si no es posible reservar memoria correspondientemente.
 **/
 
- tLista tabla[10];
 
 void crear_mapeo(tMapeo * m, int ci, int (*fHash)(void *), int (*fComparacion)(void *, void *)){
-    if((*m)!=NULL){
-        (*m)=(tMapeo)malloc(sizeof(struct mapeo));
+     (*m) = (tMapeo)malloc(sizeof(struct mapeo)) ;
+
+         if((*m)==NULL){
+            exit(MAP_ERROR_MEMORIA);
+         }
+         
+        (*m)->tabla_hash=(tLista*)malloc((sizeof(tLista)*(*m)->longitud_tabla));
+        for(int i=0;i<10;i++){
+            crear_lista(&((*m)->tabla_hash[i]));
+        }
+         
         (*m)->cantidad_elementos=0;
         (*m)->longitud_tabla=10;
-         tLista l;
-         crear_lista(&l);
-        (*m)->tabla_hash=(&l);
 
         (*m)->comparador=fComparacion;
         (*m)->hash_code=fHash;
-
-        for(int i=0;i<10;i++){
-            tLista tl;
-            crear_lista(&tl);
-            tabla[i]=tl;
-        }
-    }
-    else
-        exit(MAP_ERROR_MEMORIA);
 }
 
 /**
