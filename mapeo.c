@@ -46,60 +46,30 @@ tValor m_insertar(tMapeo m, tClave c, tValor v){
     tValor salida=NULL;
 
     if(m_recuperar(m,c)!=NULL){
-        tPosicion paux=l_primera(tabla[hashC]);
-        tEntrada taux=paux->elemento;
-        int encontrado=0;
-        while(paux->siguiente!=NULL && encontrado==0){
+       //buscar en la lista del bucket
 
-            if(m->comparador(c,taux->clave)==0){
-                encontrado=1;
-                salida=taux->valor;
-                taux->valor=c;
-            }
 
-        }
     }
     else{
-        tEntrada * ent=NULL;
-        (*ent)=(tEntrada)malloc(sizeof(struct entrada));
-        (*ent)->clave=&c;
-        (*ent)->valor=&v;
-        tLista lisAux=tabla[hashC];
-        l_insertar(lisAux,l_fin(lisAux),(*ent));
-        l_insertar(*(m->tabla_hash),l_fin(*(m->tabla_hash)),(*ent));
-
-
-        /**************************************************
-        ******************************************************
-        ******************¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿**********
-        ** No es conveniente que la entrada sea TEntrada ?????***
-        ?????????????????????????????
-        ********************************************************
-        ========================================================
+        //esto funciona
         tEntrada ent = (tEntrada) malloc(sizeof(struct entrada));
-        if(ent == NULL){
-            exit(MAP_ERROR_MEMORIA);
-        }
-
         ent->clave = c;
         ent->valor = v;
-        tLista lisAux=tabla[hashC];
-        l_insertar(lisAux,l_fin(lisAux),(ent));
-
-
-        ¿POR QUE SE ONGRESE DOS COSAS LA LA LISTA?
-
-        =============================================
-
-        */
-
+        tLista *lista_m=(m->tabla_hash);
+        l_insertar(*(lista_m+n_bloque),l_primera(*(lista_m+n_bloque)),ent);
+        m->cantidad_elementos++;
 
 
     }
 
     int sobrecarga=(m->longitud_tabla*75)/100;
     if((m->cantidad_elementos)>sobrecarga){
-       void* aux[m->cantidad_elementos];
+
+
+       //re-hacer
+
+
+       /**void* aux[m->cantidad_elementos];
        int cont=0;
        while(cont!=m->cantidad_elementos){
           for(int j=0;j<m->longitud_tabla;j++){
@@ -125,7 +95,7 @@ tValor m_insertar(tMapeo m, tClave c, tValor v){
             tLista laux=tabla[hc];
             l_insertar(laux,l_fin(*(m->tabla_hash)),eaux);
             tabla[hc]=aux[h];
-       }
+       }*/
 
     }
     return salida;

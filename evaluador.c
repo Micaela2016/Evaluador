@@ -30,8 +30,7 @@ void fEliminarV(void* valor){
     v= NULL;
 }
 
-/**
-void *fComparacion(void* p01,void* p02){
+int fComparacion(void* p01,void* p02){
 
     int * pa;
     pa= p01;
@@ -55,8 +54,8 @@ void *fComparacion(void* p01,void* p02){
     }
     return esigual;
 }
-/*
- void *fHash(void* p01){
+
+ int fHash(void* p01){
     int * parr;
     parr= p01;
     int suma=0;
@@ -70,73 +69,25 @@ void *fComparacion(void* p01,void* p02){
     }
     return  (suma/(pos-1) ) ;
 }
-*/
-
-int fComparacion(void *e1, void *e2){
-   return (strcmp(e1,e2));
-   return (strcmp(e1,e2)==0);
-}
-
-int fHash(void *p){
-
- return ((int)strlen(p));
-}
 
 
 int main(int argc, char *argv[]){
 
-    tMapeo mapo;
-
-
-    //crear lista e insertar
-    /**tLista tprueba;
-    crear_lista(&tprueba);
-    int el=5;
-    printf("log: %d\n",l_longitud(tprueba));
-    l_insertar(tprueba, l_primera(tprueba),&el );
-    printf("log: %d\n",l_longitud(tprueba));*/
-
-
-
+    tMapeo map;
     printf("CREAR MAPEO\n");
-    crear_mapeo(&mapo, 9, &fComparacion, &fHash);
-    printf("El size del mapeo es %i\n", sizeof(*mapo));
-    printf("Longitud del map es %i\n", (mapo->longitud_tabla));
-    printf("=================================\n");
+    crear_mapeo(&map, 9, fHash,fComparacion );
+    printf("El size del mapeo es %i\n", sizeof(*map));
 
+    int arr01[5]={260,50,0};
+    int valor1=10;
+    int arr02[5]={260,50,0};
+    int valor2=20;
+    printf("F hash %d\n",fHash(arr01));
+    printf("F Compa %d\n",fComparacion(arr01,arr02));//0 ig - 1 dis
+    m_insertar(map,arr01,&valor1);
+    tValor *vv=m_recuperar(map,arr02);
+    printf("valor de salidaxx:%d\n",*vv);
 
-    printf("VERIFICAR FUNCIONES fComparador y fHash\n");
-    char arr_01[5]={'c','\0'};
-    char arr_02[5]={'H','x','L','A','\0'};//0 igual -1 distinto
-    printf("arreglo 1: %s\n",arr_01);
-    printf("arreglo 2: %s\n",arr_02);
-    printf("Comparador (0 iguales y -1 distintos): %d\n",fComparacion(arr_01,arr_02));
-    printf("t Hash: %d\n",fHash(arr_01));
-    printf("=================================\n");
-
-
-
-    printf("INSERTAR ENTRADAS\n");
-    //char clave1 [10]={'c','i','d','\0'};
-    char * clave1 = "cid";
-    char valor1 [10]= {'1','0','\0'};
-
-    tClave c1= clave1;
-    tValor v1= valor1;
-
-    printf("ENTRADA: ");
-    printf("(clave,valor): (%s",c1);//ver que clave ingresa
-    printf(",%s)\n",v1);
-    //m_insertar(mapo,c1,v1);
-
-    printf("El size del mapeo es %i\n", sizeof(*mapo));
-    printf("Longitud del map es %i\n", (mapo->longitud_tabla));
-
-
-   // tValor valor10 = m_recuperar(mapo,c1);
-   // printf("valor 1:  %s\n", (char*)(valor10));
-
-   // printf("Cantidad de elementos en map es %i\n", (mapo->cantidad_elementos));
     printf("=================================\n\n");
 
     //
