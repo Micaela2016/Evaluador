@@ -41,8 +41,7 @@ void crear_mapeo(tMapeo * m, int ci, int (*fHash)(void *), int (*fComparacion)(v
 **/
 tValor m_insertar(tMapeo m, tClave c, tValor v){
     //Donde meto MAP:ERROR MEMORIA
-    int num_hash=m->hash_code(&c);
-    int hashC=num_hash%(m->longitud_tabla);
+    int n_bloque=m->hash_code(c)%(m->longitud_tabla);
     tValor salida=NULL;
 
     if(m_recuperar(m,c)!=NULL){
@@ -109,7 +108,7 @@ tValor m_insertar(tMapeo m, tClave c, tValor v){
  La clave y el valor de la entrada son eliminados mediante las funciones fEliminarC y fEliminarV.
 **/
 void m_eliminar(tMapeo m, tClave c, void (*fEliminarC)(void *), void (*fEliminarV)(void *)){
-    int hashC=m->hash_code(c)%(m->longitud_tabla);
+    /**int hashC=m->hash_code(c)%(m->longitud_tabla);
     tLista laux=tabla[hashC];
     tPosicion pos=l_primera(laux);
     tEntrada eaux;
@@ -124,7 +123,7 @@ void m_eliminar(tMapeo m, tClave c, void (*fEliminarC)(void *), void (*fEliminar
                 free(eaux);
         }
         pos=l_siguiente(laux,pos);
-    }
+    }*/
 }
 
 /**
@@ -137,7 +136,7 @@ void m_destruir(tMapeo * m, void (*fEliminarC)(void *), void (*fEliminarV)(void 
      free(mp);
 }
 extern void m_destruirAux(tMapeo m,void (*fEliminarC)(void *), void (*fEliminarV)(void *)){
-    for(int i=0;i<m->longitud_tabla;i++){
+   /** for(int i=0;i<m->longitud_tabla;i++){
         tLista laux=tabla[i];
         tPosicion pos=l_primera(laux);
 
@@ -149,7 +148,7 @@ extern void m_destruirAux(tMapeo m,void (*fEliminarC)(void *), void (*fEliminarV
             pos=l_siguiente(laux,pos);
         }
         free(laux);
-    }
+    }*/
 }
 /**
  Recupera el valor correspondiente a la entrada con clave C en M, si esta existe.
