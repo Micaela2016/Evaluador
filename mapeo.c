@@ -20,12 +20,12 @@ void crear_mapeo(tMapeo * m, int ci, int (*fHash)(void *), int (*fComparacion)(v
          if((*m)==NULL){
             exit(MAP_ERROR_MEMORIA);
          }
-         
+
         (*m)->tabla_hash=(tLista*)malloc((sizeof(tLista)*(*m)->longitud_tabla));
         for(int i=0;i<10;i++){
             crear_lista(&((*m)->tabla_hash[i]));
         }
-         
+
         (*m)->cantidad_elementos=0;
         (*m)->longitud_tabla=10;
 
@@ -187,22 +187,20 @@ extern void m_destruirAux(tMapeo m,void (*fEliminarC)(void *), void (*fEliminarV
 **/
 extern tValor m_recuperar(tMapeo m, tClave c){
     tValor salida=NULL;
-    int num_hash=m->hash_code(&c);
-    int hashC=num_hash%(m->longitud_tabla);
-    tLista laux=tabla[hashC];
-    tEntrada tAux1=l_primera(laux)->elemento;
-    if (l_longitud(laux)!=0)
-    {
-        tEntrada taux2=l_fin(laux)->elemento;
-        int encontrado=0;
-        //recupera al alemento igaul a clave
-        while((m->comparador(tAux1->clave,taux2->clave)!= 0 ) &&( encontrado == 0 ) ){
-            if((m->comparador(c,tAux1->clave))==0){
-                encontrado=1;
-                salida=tAux1->valor;
+    int n_bloque=m->hash_code(c)%(m->longitud_tabla);
+    tLista *lista_m=(m->tabla_hash);
+    if (l_longitud(*(lista_m+n_bloque))!=0)
+    {   tPosicion pos=l_primera(*(lista_m+n_bloque));
+        int b_enc=1;
+        while(pos!=l_fin(*(lista_m+n_bloque))&&(b_enc==1))
+        {    tEntrada new_ent=l_recuperar(*(lista_m+n_bloque),pos);
+            tClave * cc=new_ent->clave;
+            if (m->comparador(cc,c)==0 )//0 igual - 1 distinto
+                {   b_enc=0;
+                    salida=new_ent->valor;
+                }
+            pos=l_siguiente(*(lista_m+n_bloque),pos);
         }
-    }
-
     }
     return salida;
 }
