@@ -34,16 +34,12 @@ int fComparacion(void* p01,void* p02){
 
     int * pa;
     pa= p01;
-
     int * pb;
     pb= p02;
-
     int pos=0;
     int primero=*pa;
     int segundo=*pb;
-
     int esigual=0;
-    //recorro elemento por elemento
     while (segundo!=0&&primero!=0&&esigual!=1)
     {
         primero=*(pa+pos);
@@ -78,17 +74,34 @@ int main(int argc, char *argv[]){
     crear_mapeo(&map, 9, fHash,fComparacion );
     printf("El size del mapeo es %i\n", sizeof(*map));
 
-    int arr01[5]={260,50,0};
+    int clave01[5]={260,50,0};
     int valor1=10;
-    int arr02[5]={260,50,0};
+    int clave02[5]={350,50,0};
     int valor2=20;
-    printf("F hash %d\n",fHash(arr01));
-    printf("F Compa %d\n",fComparacion(arr01,arr02));//0 ig - 1 dis
-    m_insertar(map,arr01,&valor1);
-    tValor *vv=m_recuperar(map,arr02);
-    printf("valor de salidaxx:%d\n",*vv);
+    int clave03[5]={260,50,0};
+    int valor3=20;
+    printf("F hash %d\n",fHash(clave01));
+    printf("F hash %d\n",fHash(clave02));
+    printf("F Comparacion: 0 igual - 1 dis . es: %d\n",fComparacion(clave01,clave02));
+    m_insertar(map,clave01,&valor1); //ok
+    tValor *vv=m_recuperar(map,clave02); //recupera alguien que no esta
+    if (vv==NULL)
+    {    printf("La entrada con clave {");
+        for (int i=0;clave02[i];i++)
+            printf("%d ",clave02[i]);
+        printf("} no esta.");
+        printf("\n");
+
+    }
+    else   printf("La entrada si esta y tiene valor: %d\n",*vv);
+    printf("cant actual 01 en map xx:%d\n",map->cantidad_elementos);
+    m_eliminar(map,clave01,&fEliminarC,&fEliminarV);
+    m_eliminar(map,clave03,&fEliminarC,&fEliminarV);
+    m_eliminar(map,clave01,&fEliminarC,&fEliminarV);
+    printf("cant actual 02 en mapeoxx:%d\n",map->cantidad_elementos);
 
     printf("=================================\n\n");
+
 
     //
 printf("============================================ EVALUADOR DE ARCHIVO DE CARACTERES ASCII ==========================================================\n");

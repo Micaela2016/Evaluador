@@ -1,9 +1,8 @@
 //#include <stdlib.h>
 #include <stdio.h>
-
 #include "mapeo.h"
 #include "lista.h"
-void fEliminar(tElemento);
+void f_eliminar(tElemento e);
 void m_destruirAux(tMapeo m,void (*fEliminarC)(void *), void (*fEliminarV)(void *));
 /**
  Inicializa un mapeo vacío, con capacidad inicial igual al MAX(10, CI).
@@ -40,25 +39,30 @@ void crear_mapeo(tMapeo * m, int ci, int (*fHash)(void *), int (*fComparacion)(v
  Finaliza indicando MAP_ERROR_MEMORIA si no es posible reservar memoria correspondientemente.
 **/
 tValor m_insertar(tMapeo m, tClave c, tValor v){
-    //Donde meto MAP:ERROR MEMORIA
+    //Donde meto MAP:ERROR MEMORIA?????
     int n_bloque=m->hash_code(c)%(m->longitud_tabla);
     tValor salida=NULL;
 
     if(m_recuperar(m,c)!=NULL){
-       //buscar en la lista del bucket
-
-
+            tPosicion pos= l_primera(m->tabla_hash[n_bloque]);
+            int b_encontre=1;
+            while(pos!=l_fin(m->tabla_hash[n_bloque])&&(b_encontre==1)){
+                tEntrada new_ent=l_recuperar(m->tabla_hash[n_bloque],pos);
+                tClave * cc=new_ent->clave;
+                if (m->comparador(cc,c)==0 )//0 igual - 1 distinto
+                    {b_encontre=0;
+                     salida=new_ent->valor;
+                     new_ent->valor=v;
+                    }
+                pos=l_siguiente(m->tabla_hash[n_bloque],pos);
+             }
     }
     else{
-        //esto funciona
-        tEntrada ent = (tEntrada) malloc(sizeof(struct entrada));
-        ent->clave = c;
-        ent->valor = v;
-        tLista *lista_m=(m->tabla_hash);
-        l_insertar(*(lista_m+n_bloque),l_primera(*(lista_m+n_bloque)),ent);
-        m->cantidad_elementos++;
-
-
+            tEntrada m_entrada = (tEntrada) malloc(sizeof(struct entrada));
+            m_entrada->clave = c;
+            m_entrada->valor = v;
+            l_insertar(m->tabla_hash[n_bloque],l_primera(m->tabla_hash[n_bloque]),m_entrada);
+            m->cantidad_elementos++;
     }
 
     int sobrecarga=(m->longitud_tabla*75)/100;
@@ -100,30 +104,33 @@ tValor m_insertar(tMapeo m, tClave c, tValor v){
     return salida;
 }
 
-
-
+void f_eliminar(tElemento e){
+        free(e);
+        e = NULL;
+}
 
 /**
  Elimina la entrada con clave C en M, si esta existe.
  La clave y el valor de la entrada son eliminados mediante las funciones fEliminarC y fEliminarV.
 **/
 void m_eliminar(tMapeo m, tClave c, void (*fEliminarC)(void *), void (*fEliminarV)(void *)){
-    /**int hashC=m->hash_code(c)%(m->longitud_tabla);
-    tLista laux=tabla[hashC];
-    tPosicion pos=l_primera(laux);
-    tEntrada eaux;
-    int encontrado = 0;
-
-    while(pos->siguiente!=NULL && encontrado==0){
-        eaux=pos->elemento;
-        if( m->comparador(c,eaux->clave)==0){
-                encontrado=1;
-                fEliminarC(eaux->clave);
-                fEliminarV(eaux->valor);
-                free(eaux);
+    int n_bloque=m->hash_code(c)%(m->longitud_tabla);
+    tPosicion pos=l_primera(m->tabla_hash[n_bloque]);
+    tEntrada entrada_a;
+    int b_encontre=1;
+    while(pos!=l_fin(m->tabla_hash[n_bloque])&&(b_encontre==1))
+      { entrada_a=l_recuperar(m->tabla_hash[n_bloque],pos);
+        tClave cc=entrada_a->clave;
+        if( m->comparador(cc,c)==0){
+                b_encontre=0;
+                fEliminarC(entrada_a->clave);
+                fEliminarV(entrada_a->valor);
+                m->cantidad_elementos--;
         }
-        pos=l_siguiente(laux,pos);
-    }*/
+           else pos=l_siguiente(m->tabla_hash[n_bloque],pos);
+      }
+    if (b_encontre==0)
+           l_eliminar(m->tabla_hash[n_bloque],pos,&f_eliminar);
 }
 
 /**
@@ -157,24 +164,18 @@ extern void m_destruirAux(tMapeo m,void (*fEliminarC)(void *), void (*fEliminarV
 extern tValor m_recuperar(tMapeo m, tClave c){
     tValor salida=NULL;
     int n_bloque=m->hash_code(c)%(m->longitud_tabla);
-    tLista *lista_m=(m->tabla_hash);
-    if (l_longitud(*(lista_m+n_bloque))!=0)
-    {   tPosicion pos=l_primera(*(lista_m+n_bloque));
-        int b_enc=1;
-        while(pos!=l_fin(*(lista_m+n_bloque))&&(b_enc==1))
-        {    tEntrada new_ent=l_recuperar(*(lista_m+n_bloque),pos);
-            tClave * cc=new_ent->clave;
-            if (m->comparador(cc,c)==0 )//0 igual - 1 distinto
-                {   b_enc=0;
-                    salida=new_ent->valor;
-                }
-            pos=l_siguiente(*(lista_m+n_bloque),pos);
-        }
+    if (l_longitud(m->tabla_hash[n_bloque])!=0)
+    {   tPosicion pos=l_primera(m->tabla_hash[n_bloque]);
+        int b_encontre=1;
+        while(pos!=l_fin(m->tabla_hash[n_bloque])&&(b_encontre==1))
+          {     tEntrada new_ent=l_recuperar(m->tabla_hash[n_bloque],pos);
+                tClave * cc=new_ent->clave;
+                if (m->comparador(cc,c)==0 )//0 igual - 1 distinto
+                    {   b_encontre=0;
+                        salida=new_ent->valor;
+                    }
+                pos=l_siguiente(m->tabla_hash[n_bloque],pos);
+          }
     }
     return salida;
 }
-
-//hago esta funcion aunque no hace nd por parametro
-//extern void fEliminar(tElemento e){
-
-//}
