@@ -80,10 +80,38 @@ int main(int argc, char *argv[]){
     int valor2=20;
     int clave03[5]={260,50,0};
     int valor3=20;
+    int clave04[5]={150,50,0};
+    int valor4=20;
+    int clave05[5]={550,50,0};
+    int valor5=20;
+    int clave06[5]={450,50,0};
+    int valor6=20;
+    int clave07[5]={950,50,0};
+    int valor7=20;
     printf("F hash %d\n",fHash(clave01));
     printf("F hash %d\n",fHash(clave02));
     printf("F Comparacion: 0 igual - 1 dis . es: %d\n",fComparacion(clave01,clave02));
-    m_insertar(map,clave01,&valor1); //ok
+    m_insertar(map,clave01,&valor1);
+    m_insertar(map,clave02,&valor2);
+    m_insertar(map,clave03,&valor3);
+    m_insertar(map,clave04,&valor4);
+    m_insertar(map,clave05,&valor5);
+    m_insertar(map,clave06,&valor6);
+    m_insertar(map,clave07,&valor7);
+
+    for(int i = 0; i<map->longitud_tabla; i++){
+
+        tPosicion pos=l_primera(map->tabla_hash[i]);
+        while(pos!=l_fin(map->tabla_hash[i]))
+          {     tEntrada new_ent=l_recuperar(map->tabla_hash[i],pos);
+                tClave * cc=new_ent->clave;
+                printf("clave: %d bucket: %d\n",*cc,i);
+
+                pos=l_siguiente(map->tabla_hash[i],pos);
+          }
+
+    }
+
     tValor *vv=m_recuperar(map,clave02); //recupera alguien que no esta
     if (vv==NULL)
     {    printf("La entrada con clave {");
@@ -99,6 +127,9 @@ int main(int argc, char *argv[]){
     m_eliminar(map,clave03,&fEliminarC,&fEliminarV);
     m_eliminar(map,clave01,&fEliminarC,&fEliminarV);
     printf("cant actual 02 en mapeoxx:%d\n",map->cantidad_elementos);
+
+    m_destruir(&map,&fEliminarC,&fEliminarV);
+
 
     printf("=================================\n\n");
 

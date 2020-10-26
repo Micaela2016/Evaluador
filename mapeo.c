@@ -4,6 +4,15 @@
 #include "lista.h"
 void f_eliminar(tElemento e);
 void m_destruirAux(tMapeo m,void (*fEliminarC)(void *), void (*fEliminarV)(void *));
+void destruirEntrada(tElemento e);
+
+
+
+
+static int MAX (int x, int y){
+    return x<y?y:x;
+}
+
 /**
  Inicializa un mapeo vacío, con capacidad inicial igual al MAX(10, CI).
  Una referencia al mapeo creado es referenciada en *M.
@@ -11,23 +20,19 @@ void m_destruirAux(tMapeo m,void (*fEliminarC)(void *), void (*fEliminarV)(void 
  A todo efecto, la comparación de claves se realizará mediante la función fComparacion.
  Finaliza indicando MAP_ERROR_MEMORIA si no es posible reservar memoria correspondientemente.
 **/
-
-
 void crear_mapeo(tMapeo * m, int ci, int (*fHash)(void *), int (*fComparacion)(void *, void *)){
-     (*m) = (tMapeo)malloc(sizeof(struct mapeo)) ;
+       (*m) = (tMapeo)malloc(sizeof(struct mapeo)) ;
 
-         if((*m)==NULL){
+        if((*m)==NULL){
             exit(MAP_ERROR_MEMORIA);
-         }
-
+          }
+        (*m)->longitud_tabla=MAX(10,ci);
         (*m)->tabla_hash=(tLista*)malloc((sizeof(tLista)*(*m)->longitud_tabla));
         for(int i=0;i<10;i++){
             crear_lista(&((*m)->tabla_hash[i]));
         }
 
         (*m)->cantidad_elementos=0;
-        (*m)->longitud_tabla=10;
-
         (*m)->comparador=fComparacion;
         (*m)->hash_code=fHash;
 }
@@ -58,49 +63,48 @@ tValor m_insertar(tMapeo m, tClave c, tValor v){
              }
     }
     else{
-            tEntrada m_entrada = (tEntrada) malloc(sizeof(struct entrada));
-            m_entrada->clave = c;
-            m_entrada->valor = v;
-            l_insertar(m->tabla_hash[n_bloque],l_primera(m->tabla_hash[n_bloque]),m_entrada);
-            m->cantidad_elementos++;
-    }
+                    tEntrada m_entrada = (tEntrada) malloc(sizeof(struct entrada));
+                    if((m_entrada)==NULL){
+                        exit(MAP_ERROR_MEMORIA);
+                    }
 
-    int sobrecarga=(m->longitud_tabla*75)/100;
-    if((m->cantidad_elementos)>sobrecarga){
+                    m_entrada->clave = c;
+                    m_entrada->valor = v;
+                    l_insertar(m->tabla_hash[n_bloque],l_primera(m->tabla_hash[n_bloque]),m_entrada);
+                    m->cantidad_elementos++;
+         }
+
+        int sobrecarga=(m->longitud_tabla*70)/100;
+        if((m->cantidad_elementos)>sobrecarga){
+                int DimensionAnterior = m->longitud_tabla;
+                int NuevaDimension = (m->longitud_tabla *2);
+
+                tLista* ArregloAnterior= m->tabla_hash;
 
 
-       //re-hacer
+                m->longitud_tabla = NuevaDimension;
+                m->tabla_hash=(tLista*)malloc((sizeof(tLista)*(m)->longitud_tabla));
+                if((m)==NULL) exit(MAP_ERROR_MEMORIA);
+
+                for(int i = 0; i<NuevaDimension; i++){
+                    crear_lista(&(m->tabla_hash[i]));
+                }
+
+                m->cantidad_elementos=0;
+                for(int ii = 0; ii<DimensionAnterior; ii++){
+                    tPosicion pos= l_primera(ArregloAnterior[ii]);
+                    while (pos!=l_fin(ArregloAnterior[ii]))
+                    {   tEntrada entrada_a=l_recuperar(ArregloAnterior[ii],pos);
+                        tClave * cc=entrada_a->clave;
+                        tValor * vv=entrada_a->valor;
+                        m_insertar(m,cc,vv);
+                        pos=l_siguiente(ArregloAnterior[ii],pos);
+                    }
+                }
+
+        }
 
 
-       /**void* aux[m->cantidad_elementos];
-       int cont=0;
-       while(cont!=m->cantidad_elementos){
-          for(int j=0;j<m->longitud_tabla;j++){
-            tLista laux=tabla[j];
-            while(l_longitud(laux)!=0){
-                aux[j]=l_fin(laux)->elemento;
-                l_eliminar(laux,l_fin(laux),fEliminar);
-                cont++;
-             }
-          }
-       }
-       tabla[m->longitud_tabla*10];//PROBLEMA PARA REASIGNAR LA LONGITUD DEL ARREGLO
-
-       m->longitud_tabla=10*10;
-       for(int k=0;k<=m->cantidad_elementos;k++){
-            tLista tl;
-            crear_lista(&tl);
-            tabla[k]=tl;
-       }
-       for(int h=0;h<m->cantidad_elementos;h++){
-            tEntrada eaux=aux[h];
-            int hc=m->hash_code(eaux->clave)%(m->longitud_tabla);
-            tLista laux=tabla[hc];
-            l_insertar(laux,l_fin(*(m->tabla_hash)),eaux);
-            tabla[hc]=aux[h];
-       }*/
-
-    }
     return salida;
 }
 
@@ -133,14 +137,30 @@ void m_eliminar(tMapeo m, tClave c, void (*fEliminarC)(void *), void (*fEliminar
            l_eliminar(m->tabla_hash[n_bloque],pos,&f_eliminar);
 }
 
+
+
+void destruirEntrada(tElemento e){
+    free(e);
+    e=NULL;
+}
+
 /**
  Destruye el mapeo M, elimininando cada una de sus entradas.
  Las claves y valores almacenados en las entradas son eliminados mediante las funciones fEliminarC y fEliminarV.
 **/
 void m_destruir(tMapeo * m, void (*fEliminarC)(void *), void (*fEliminarV)(void *)){
      tMapeo mp=(*m);
-     m_destruirAux(mp,fEliminarC,fEliminarV);
+     tLista laux;
+     int limCant=(*m)->longitud_tabla;
+
+     for(int i=0;i<limCant;i++){
+        laux =   (*m)->tabla_hash[i];
+        l_destruir(&laux,&destruirEntrada);
+     }
+     free(mp->tabla_hash);
      free(mp);
+     (*m)=NULL;
+
 }
 extern void m_destruirAux(tMapeo m,void (*fEliminarC)(void *), void (*fEliminarV)(void *)){
    /** for(int i=0;i<m->longitud_tabla;i++){
