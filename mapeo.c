@@ -67,14 +67,15 @@ tValor m_insertar(tMapeo m, tClave c, tValor v){
                     if((m_entrada)==NULL){
                         exit(MAP_ERROR_MEMORIA);
                     }
-
-                    m_entrada->clave = c;
-                    m_entrada->valor = v;
-                    l_insertar(m->tabla_hash[n_bloque],l_primera(m->tabla_hash[n_bloque]),m_entrada);
-                    m->cantidad_elementos++;
+                    else{
+                        m_entrada->clave = c;
+                        m_entrada->valor = v;
+                        l_insertar(m->tabla_hash[n_bloque],l_primera(m->tabla_hash[n_bloque]),m_entrada);
+                        m->cantidad_elementos++;
+                    }
          }
 
-        int sobrecarga=(m->longitud_tabla*70)/100;
+        int sobrecarga=(m->longitud_tabla*30)/100;
         if((m->cantidad_elementos)>sobrecarga){
                 int DimensionAnterior = m->longitud_tabla;
                 int NuevaDimension = (m->longitud_tabla *2);
@@ -85,22 +86,27 @@ tValor m_insertar(tMapeo m, tClave c, tValor v){
                 m->longitud_tabla = NuevaDimension;
                 m->tabla_hash=(tLista*)malloc((sizeof(tLista)*(m)->longitud_tabla));
                 if((m)==NULL) exit(MAP_ERROR_MEMORIA);
+                else{
 
-                for(int i = 0; i<NuevaDimension; i++){
-                    crear_lista(&(m->tabla_hash[i]));
-                }
+                        for(int i = 0; i<NuevaDimension; i++){
+                            crear_lista(&(m->tabla_hash[i]));
+                        }
 
-                m->cantidad_elementos=0;
-                for(int ii = 0; ii<DimensionAnterior; ii++){
-                    tPosicion pos= l_primera(ArregloAnterior[ii]);
-                    while (pos!=l_fin(ArregloAnterior[ii]))
-                    {   tEntrada entrada_a=l_recuperar(ArregloAnterior[ii],pos);
-                        tClave * cc=entrada_a->clave;
-                        tValor * vv=entrada_a->valor;
-                        m_insertar(m,cc,vv);
-                        pos=l_siguiente(ArregloAnterior[ii],pos);
-                    }
-                }
+                        for(int ii = 0; ii<DimensionAnterior; ii++){
+                            tPosicion pos= l_primera(ArregloAnterior[ii]);
+                            while (pos!=l_fin(ArregloAnterior[ii]))
+                              {
+                                tEntrada entrada_a=l_recuperar(ArregloAnterior[ii],pos);
+                                tClave * cc=entrada_a->clave;
+                                tValor * vv=entrada_a->valor;
+
+                                int bloque_nuevo=m->hash_code(cc)%(m->longitud_tabla);
+                                l_insertar(m->tabla_hash[bloque_nuevo],l_primera(m->tabla_hash[bloque_nuevo]),entrada_a);
+
+                                pos=l_siguiente(ArregloAnterior[ii],pos);
+                              }
+                         }
+                 }
 
         }
 
