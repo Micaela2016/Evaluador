@@ -5,6 +5,7 @@
 void f_eliminar(tElemento e);
 void m_destruirAux(tMapeo m,void (*fEliminarC)(void *), void (*fEliminarV)(void *));
 void destruirEntrada(tElemento e);
+void f_eliminar_nada(tElemento e);
 
 
 
@@ -37,6 +38,8 @@ void crear_mapeo(tMapeo * m, int ci, int (*fHash)(void *), int (*fComparacion)(v
         (*m)->hash_code=fHash;
 }
 
+void f_eliminar_nada(tElemento e){}
+
 /**
  Inserta una entrada con clave C y valor V, en M.
  Si una entrada con clave C y valor Vi ya existe en M, modifica Vi por V.
@@ -44,7 +47,6 @@ void crear_mapeo(tMapeo * m, int ci, int (*fHash)(void *), int (*fComparacion)(v
  Finaliza indicando MAP_ERROR_MEMORIA si no es posible reservar memoria correspondientemente.
 **/
 tValor m_insertar(tMapeo m, tClave c, tValor v){
-    //Donde meto MAP:ERROR MEMORIA?????
     int n_bloque=m->hash_code(c)%(m->longitud_tabla);
     tValor salida=NULL;
 
@@ -75,13 +77,12 @@ tValor m_insertar(tMapeo m, tClave c, tValor v){
                     }
          }
 
-        int sobrecarga=(m->longitud_tabla*30)/100;
+        int sobrecarga=(m->longitud_tabla*70)/100;
         if((m->cantidad_elementos)>sobrecarga){
                 int DimensionAnterior = m->longitud_tabla;
                 int NuevaDimension = (m->longitud_tabla *2);
 
                 tLista* ArregloAnterior= m->tabla_hash;
-
 
                 m->longitud_tabla = NuevaDimension;
                 m->tabla_hash=(tLista*)malloc((sizeof(tLista)*(m)->longitud_tabla));
@@ -97,14 +98,13 @@ tValor m_insertar(tMapeo m, tClave c, tValor v){
                             while (pos!=l_fin(ArregloAnterior[ii]))
                               {
                                 tEntrada entrada_a=l_recuperar(ArregloAnterior[ii],pos);
-                                tClave * cc=entrada_a->clave;
-                                tValor * vv=entrada_a->valor;
-
-                                int bloque_nuevo=m->hash_code(cc)%(m->longitud_tabla);
+                                int bloque_nuevo=m->hash_code(entrada_a->clave)%(m->longitud_tabla);
                                 l_insertar(m->tabla_hash[bloque_nuevo],l_primera(m->tabla_hash[bloque_nuevo]),entrada_a);
-
                                 pos=l_siguiente(ArregloAnterior[ii],pos);
                               }
+
+                            l_destruir(&ArregloAnterior[ii],&f_eliminar_nada);
+
                          }
                  }
 

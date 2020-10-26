@@ -53,17 +53,17 @@
 
 1601679865 c:\onedrive\cs\organizacion de computadoras\proyectodec\proyectoc\lista.h
 
-1603647454 source:c:\users\maxiaguero\desktop\proc\evaluador\lista.c
+1603752074 source:c:\users\maxiaguero\desktop\proc\evaluador\lista.c
 	<stdio.h>
 	"lista.h"
 
-1603647454 c:\users\maxiaguero\desktop\proc\evaluador\lista.h
+1603752074 c:\users\maxiaguero\desktop\proc\evaluador\lista.h
 
-1603724462 source:c:\users\maxiaguero\desktop\proc\evaluador\evaluador.c
+1603752074 source:c:\users\maxiaguero\desktop\proc\evaluador\evaluador.c
 	<stdio.h>
 	"mapeo.h"
 
-1603647454 c:\users\maxiaguero\desktop\proc\evaluador\mapeo.h
+1603752074 c:\users\maxiaguero\desktop\proc\evaluador\mapeo.h
 	"lista.h"
 
 1603723922 source:c:\users\maxiaguero\desktop\proc\evaluador\mapeo.c
