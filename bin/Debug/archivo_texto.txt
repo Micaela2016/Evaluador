@@ -1,1 +1,1 @@
-sid buck manny diego morita
+150 50 255 112 255 114 115 99 98 90 255

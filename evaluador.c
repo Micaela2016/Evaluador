@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <stdlib.h>
+//#include <stdlib.h>
 #include <string.h>
 #include "mapeo.h"
 
@@ -16,7 +16,7 @@ void fEliminarV(void* valor){
     v= NULL;
 }
 
-/*  Funcion comparacion
+/*  Funcion de comparacion
     Tiene como objetivo comparar dos elementos pasados por parametro.
     Utiliza la funcion strcmp de la libreria string.
     Retorna:
@@ -24,17 +24,38 @@ void fEliminarV(void* valor){
     -Valor positivo si la primera cadena es mayor
     -Valor negativo si la primera cadena es menor.
 */
-int fComparacion(void* p01,void* p02){
+int fComparacion2(void* p01,void* p02){
     int result;
     char * pa = p01;
     char * pb = p02;
     return result= strcmp(pa,pb);
 }
 
+int fComparacion(void* p01,void* p02){
+
+    int * pa;
+    pa= p01;
+    int * pb;
+    pb= p02;
+    int pos=0;
+    int primero=*pa;
+    int segundo=*pb;
+    int esigual=0;
+    while (segundo!=0&&primero!=0&&esigual!=1)
+    {
+        primero=*(pa+pos);
+        segundo=*(pb+pos);
+        if (primero!=segundo)
+            esigual=1;
+        pos++;
+    }
+    return esigual;
+}
+
 /*  Funcion hash
     Tiene como objetivo generar un codigo unico que identifica al elemento pasado por parametro
 */
- int fHash(void* p01){
+ int fHash2(void* p01){
     char* arr= (char*) p01;
     int suma=0;
     int pos=0;
@@ -46,6 +67,21 @@ int fComparacion(void* p01,void* p02){
         pos++;
     }*/
     return  (suma/(pos-1) );
+}
+
+ int fHash(void* p01){
+    int * parr;
+    parr= p01;
+    int suma=0;
+    int pos=0;
+    int primero=*parr;
+    while (primero!=0 )
+    {
+        primero=*(parr+pos);
+        suma=suma+primero;
+        pos++;
+    }
+    return  (suma/(pos-1) ) ;
 }
 
 //                                 Funciones de evaluador
@@ -63,79 +99,15 @@ void salir(FILE *fp){
 int main(int argc, char *argv[]){
 
     tMapeo map;
-    printf("CREAR MAPEO\n");
-    crear_mapeo(&map, 9, fHash,fComparacion );
-    printf("El size del mapeo es %i\n", sizeof(*map));
+    crear_mapeo(&map, 9, &fHash,&fComparacion );
 
-    int clave01[5]={260,50,0};
-    int valor1=10;
-    int clave02[5]={350,50,0};
-    int valor2=20;
-    int clave03[5]={260,50,0};
-    int valor3=20;
-    int clave04[5]={150,50,0};
-    int valor4=20;
-    int clave05[5]={550,50,0};
-    int valor5=20;
-    int clave06[5]={450,50,0};
-    int valor6=20;
-    int clave07[5]={950,50,0};
-    int valor7=20;
-    printf("F hash %d\n",fHash(clave01));
-    printf("F hash %d\n",fHash(clave02));
-    printf("F Comparacion: 0 igual - 1 dis . es: %d\n",fComparacion(clave01,clave02));
-    m_insertar(map,clave01,&valor1);
-    m_insertar(map,clave02,&valor2);
-    m_insertar(map,clave03,&valor3);
-    m_insertar(map,clave04,&valor4);
-    m_insertar(map,clave05,&valor5);
-    m_insertar(map,clave06,&valor6);
-    m_insertar(map,clave07,&valor7);
-
-    for(int i = 0; i<map->longitud_tabla; i++){
-
-        tPosicion pos=l_primera(map->tabla_hash[i]);
-        while(pos!=l_fin(map->tabla_hash[i]))
-          {     tEntrada new_ent=l_recuperar(map->tabla_hash[i],pos);
-                tClave * cc=new_ent->clave;
-                printf("clave: %d bucket: %d\n",*cc,i);
-
-                pos=l_siguiente(map->tabla_hash[i],pos);
-          }
-
-    }
-
-    tValor *vv=m_recuperar(map,clave02); //recupera alguien que no esta
-    if (vv==NULL)
-    {    printf("La entrada con clave {");
-        for (int i=0;clave02[i];i++)
-            printf("%d ",clave02[i]);
-        printf("} no esta.");
-        printf("\n");
-
-    }
-    else   printf("La entrada si esta y tiene valor: %d\n",*vv);
-    printf("cant actual 01 en map xx:%d\n",map->cantidad_elementos);
-    m_eliminar(map,clave01,&fEliminarC,&fEliminarV);
-    m_eliminar(map,clave03,&fEliminarC,&fEliminarV);
-    m_eliminar(map,clave01,&fEliminarC,&fEliminarV);
-    printf("cant actual 02 en mapeoxx:%d\n",map->cantidad_elementos);
-
-    m_destruir(&map,&fEliminarC,&fEliminarV);
-
-
-    printf("=================================\n\n");
-
-
-    //
 printf("============================================ EVALUADOR DE ARCHIVO DE CARACTERES ASCII ==========================================================\n");
 
-    //inicio leer el archivo desde cmd
-    if(argc==2)
+   if(argc==2)
     {
-        char* archivo_nombre = argv[1];
-        FILE* archivo_ascii;
-        if((archivo_ascii= fopen(archivo_nombre,"r"))==NULL)
+        char* nombre_arc = argv[1];
+        FILE* arch_ascii;
+        if((arch_ascii= fopen(nombre_arc,"r"))==NULL)
         {
 
             printf ("El archivo es archivo invalido.\n"); //Abro el archivo en modo lectura
@@ -144,86 +116,55 @@ printf("============================================ EVALUADOR DE ARCHIVO DE CAR
         else
         {
 
-            printf("%s\n",archivo_ascii);
+            printf("%s\n",arch_ascii);
 
-            if(feof(archivo_ascii))
-            {
-                    printf("El archivo %s esta vacio\n",archivo_ascii);
-            }
+            if(feof(arch_ascii))
+                    printf("El archivo %s esta vacio\n",arch_ascii);
             else
-            {
-                rewind(archivo_ascii);
-                char arr_archivo[250];
-                char *p_archivo;
-                int indic=0;
-                while(!feof(archivo_ascii))
+            {   int palabra_en_ascii[250];
+                rewind(arch_ascii);
+                int indice_superior=0;
+                while(!feof(arch_ascii))
                 {
-                    arr_archivo[indic]=fgetc(archivo_ascii);
-                    indic++;
-
+                   fscanf(arch_ascii,"%d",&palabra_en_ascii[indice_superior]);
+                   indice_superior++;
                 }
-                indic=0;
-                printf("{");
-                  while(arr_archivo[indic]!='\0')
-                {
-
-                    printf("%c ",arr_archivo[indic]);
-                    indic++;
-
-                }
-                printf("}");
-                printf("\n");
-                printf("================fin contenido==============\n");
-
-
-
-                rewind(archivo_ascii);
-                fclose(archivo_ascii);
-
-
-                /*************CARGAR EN MAPEO LO QUE LEI DEL ARCHIVO***********************/
-                //TENGO UN ARREGLO DE CARCTERES YA CAGADO: arr_archivo
-                //RESTA PASAR LAS PALABRAS AL MAPEO
-
-
+                rewind(arch_ascii);
+                fclose(arch_ascii);
 
                 int i=0;
-                int pri=0;
-                //sin punteros recorro el arreglo
-                while(arr_archivo[i]!=0)
+                int indice_inferior=0;
+                int sup=indice_superior;
+                while(i<sup)
                 {
-                    if (arr_archivo[i]==255)
-                        { int sup=i-1;
-                          printf("%i ",pri);
-                          printf("%i \n",sup);
-                          //n-esima palabra
-                          for(int pos=pri;pos<=sup;pos++)
-                            {
-                                printf("%c ",arr_archivo[pos]);
-                            }
+                    if (palabra_en_ascii[i]==255)
+                    {
+                        indice_superior=i-1;
+                        int *una_palabra_ascii;
+                        una_palabra_ascii=(int*) malloc( sizeof(int)*(indice_superior - indice_inferior + 2) );
+                        int ini=0;
+                        for(int pos=indice_inferior;pos<=indice_superior;pos++)
+                        {
+                                *(una_palabra_ascii+ini)=palabra_en_ascii[pos];
+                                ini++;
+                        }
+                        una_palabra_ascii[ini]=0;
+                        int valor1=1;//PREGUNTAR QUE VA EN VALOR??
+                        m_insertar(map,una_palabra_ascii,&valor1);
 
-                          printf(" \n");
-                          pri=sup+2;
-                          }
+                        indice_inferior=indice_superior+2;
+
+                    }
 
                     i++;
                 }
-                //ultima palabra
-                printf("%i ",pri);
-                printf("%i \n",i-1);
-                for(int ult=pri;ult<=i-1;ult++)
-                    {
-                        printf("%c ",arr_archivo[ult]);
-                    }
+
+
+                printf("\n");
+                printf("Cantidad actual de palabras en mapeo: %d\n",map->cantidad_elementos);
                 printf("\n");
 
-
-
-
-
-
-                /***************************************/
-
+               /*************YA TENGO CARGADO EN MAPEO LO QUE LEI DEL ARCHIVO***********************/
 
 
 
@@ -238,13 +179,7 @@ printf("============================================ EVALUADOR DE ARCHIVO DE CAR
         return 1;
     }
 
-    //insertar palabras del archivo al mapeo
 
-
-
-
-
-    //asumo que tengo el archivo en un arreglo
 
 
 
@@ -269,7 +204,8 @@ printf("============================================ EVALUADOR DE ARCHIVO DE CAR
             printf("opcion 1 \n");
             printf("Ingrese una palabra: ");
             scanf("%[^\n",cadena);
-            //opero con cadena= es un string
+            //operar en mapeo: buscar esta clave en el mapeo y devolver su valor
+
 
             fflush(stdin);
             break;
@@ -277,7 +213,7 @@ printf("============================================ EVALUADOR DE ARCHIVO DE CAR
         case 2:{
             salir = 1;
             printf("opcion 2>>");
-            printf("Eso es todo amigos! \n");
+            printf("Eso es todo! \n");
             break;
         }
         default:{
