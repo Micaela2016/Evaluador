@@ -1,5 +1,5 @@
 #include <stdio.h>
-//#include <stdlib.h>
+#include <stdlib.h>
 #include <string.h>
 #include "mapeo.h"
 
@@ -23,20 +23,19 @@ void fEliminarV(void* valor){
     -0 Si las cadenas son iguales
     -Valor positivo si la primera cadena es mayor
     -Valor negativo si la primera cadena es menor.
-
 */
 int fComparacion(void* p01,void* p02){
     int result;
     char * pa = p01;
     char * pb = p02;
-    result= strcmp(pa,pb);
+    return result= strcmp(pa,pb);
 }
 
 /*  Funcion hash
     Tiene como objetivo generar un codigo unico que identifica al elemento pasado por parametro
 */
  int fHash(void* p01){
-    char* arr= p01;
+    char* arr= (char*) p01;
     int suma=0;
     int pos=0;
     /*int primero=*parr;
@@ -162,8 +161,6 @@ printf("============================================ EVALUADOR DE ARCHIVO DE CAR
                     arr_archivo[indic]=fgetc(archivo_ascii);
                     indic++;
 
-
-
                 }
                 indic=0;
                 printf("{");
@@ -172,8 +169,6 @@ printf("============================================ EVALUADOR DE ARCHIVO DE CAR
 
                     printf("%c ",arr_archivo[indic]);
                     indic++;
-
-
 
                 }
                 printf("}");
