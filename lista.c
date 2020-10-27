@@ -24,15 +24,13 @@ void crear_lista(tLista * l){
 
  Situaciones:
  -Si la posicion pasada por parametro no existe entpnces debe abortar la ejecucion.
- -Si fue posible reservar memoria entonces debe insertar el elemento. (PREGUNTAR QUE PASA EN EL CASO DE INSERCION DEL PRIMER ELEMENTO.
+ -Si fue posible reservar memoria entonces debe insertar el elemento.
  -Si no fue posible reservar memoria entonces debe abortar la ejecucion.
  Observacion: Omitimos chequear si la lista no fue creada previamente
 **/
 
 void l_insertar(tLista l, tPosicion p, tElemento e){
-    if (l==NULL)
-        exit(LST_POSICION_INVALIDA);
-    if (p==NULL)
+    if (l==NULL || p==NULL)
         exit(LST_POSICION_INVALIDA);
     tPosicion posNueva= (tPosicion) malloc(sizeof(struct celda));
     if (posNueva!=NULL){
@@ -58,7 +56,6 @@ void l_eliminar(tLista l, tPosicion p, void (*fEliminar)(tElemento)){
         elim->siguiente=NULL;
         elim->elemento=NULL;
         free(elim);
-
     }
     else exit (LST_POSICION_INVALIDA);
 }
@@ -77,6 +74,7 @@ static void destruirAux(void (*fEliminar)(tElemento),tPosicion pos){
 
     fEliminar(pos->elemento);
     pos->elemento = NULL;
+    pos->siguiente =NULL;
     free(pos);
 }
 

@@ -2,17 +2,17 @@
 #include <stdio.h>
 #include "mapeo.h"
 #include "lista.h"
-void f_eliminar(tElemento e);
-void m_destruirAux(tMapeo m,void (*fEliminarC)(void *), void (*fEliminarV)(void *));
+
+//Funciones globales
 void destruirEntrada(tElemento e);
+void (*fEliminarClaves) (void*);
+void (*fEliminarValores) (void*);
+
+static int MAX (int x, int y);
+
 void f_eliminar_nada(tElemento e);
+void f_eliminar(tElemento e);
 
-
-
-
-static int MAX (int x, int y){
-    return x<y?y:x;
-}
 
 /**
  Inicializa un mapeo vacío, con capacidad inicial igual al MAX(10, CI).
@@ -22,12 +22,13 @@ static int MAX (int x, int y){
  Finaliza indicando MAP_ERROR_MEMORIA si no es posible reservar memoria correspondientemente.
 **/
 void crear_mapeo(tMapeo * m, int ci, int (*fHash)(void *), int (*fComparacion)(void *, void *)){
-       (*m) = (tMapeo)malloc(sizeof(struct mapeo)) ;
 
-        if((*m)==NULL){
+       (*m) = (tMapeo)malloc(sizeof(struct mapeo)) ;
+       if((*m)==NULL){
             exit(MAP_ERROR_MEMORIA);
           }
         (*m)->longitud_tabla=MAX(10,ci);
+
         (*m)->tabla_hash=(tLista*)malloc((sizeof(tLista)*(*m)->longitud_tabla));
         for(int i=0;i<10;i++){
             crear_lista(&((*m)->tabla_hash[i]));
@@ -38,7 +39,6 @@ void crear_mapeo(tMapeo * m, int ci, int (*fHash)(void *), int (*fComparacion)(v
         (*m)->hash_code=fHash;
 }
 
-void f_eliminar_nada(tElemento e){}
 
 /**
  Inserta una entrada con clave C y valor V, en M.
@@ -56,7 +56,7 @@ tValor m_insertar(tMapeo m, tClave c, tValor v){
             while(pos!=l_fin(m->tabla_hash[n_bloque])&&(b_encontre==1)){
                 tEntrada new_ent=l_recuperar(m->tabla_hash[n_bloque],pos);
                 tClave * cc=new_ent->clave;
-                if (m->comparador(cc,c)==0 )//0 igual - 1 distinto
+                if (m->comparador(cc,c)==0 )//0 igual
                     {b_encontre=0;
                      salida=new_ent->valor;
                      new_ent->valor=v;
@@ -109,14 +109,7 @@ tValor m_insertar(tMapeo m, tClave c, tValor v){
                  }
 
         }
-
-
     return salida;
-}
-
-void f_eliminar(tElemento e){
-        free(e);
-        e = NULL;
 }
 
 /**
@@ -143,13 +136,6 @@ void m_eliminar(tMapeo m, tClave c, void (*fEliminarC)(void *), void (*fEliminar
            l_eliminar(m->tabla_hash[n_bloque],pos,&f_eliminar);
 }
 
-
-
-void destruirEntrada(tElemento e){
-    free(e);
-    e=NULL;
-}
-
 /**
  Destruye el mapeo M, elimininando cada una de sus entradas.
  Las claves y valores almacenados en las entradas son eliminados mediante las funciones fEliminarC y fEliminarV.
@@ -158,6 +144,9 @@ void m_destruir(tMapeo * m, void (*fEliminarC)(void *), void (*fEliminarV)(void 
      tMapeo mp=(*m);
      tLista laux;
      int limCant=(*m)->longitud_tabla;
+
+     fEliminarClaves= fEliminarC;
+     fEliminarValores =fEliminarV;
 
      for(int i=0;i<limCant;i++){
         laux =   (*m)->tabla_hash[i];
@@ -168,21 +157,7 @@ void m_destruir(tMapeo * m, void (*fEliminarC)(void *), void (*fEliminarV)(void 
      (*m)=NULL;
 
 }
-extern void m_destruirAux(tMapeo m,void (*fEliminarC)(void *), void (*fEliminarV)(void *)){
-   /** for(int i=0;i<m->longitud_tabla;i++){
-        tLista laux=tabla[i];
-        tPosicion pos=l_primera(laux);
 
-        while(pos->siguiente!=NULL){
-            tEntrada eaux=pos->elemento;
-            fEliminarC(&(eaux->clave));
-            fEliminarV(&(eaux->valor));
-
-            pos=l_siguiente(laux,pos);
-        }
-        free(laux);
-    }*/
-}
 /**
  Recupera el valor correspondiente a la entrada con clave C en M, si esta existe.
  Retorna el valor correspondiente, o NULL en caso contrario.
@@ -204,4 +179,32 @@ extern tValor m_recuperar(tMapeo m, tClave c){
           }
     }
     return salida;
+}
+
+//                      Implementacion de funciones auxiliares
+
+// Funcion que calcula el maximo entre dos numeros enteros.
+static int MAX (int x, int y){
+    return x<y?y:x;
+}
+
+//Procedimiento auxiliar la cual no elimina nada.
+void f_eliminar_nada(tElemento e){
+}
+
+//Procedimiento para eliminar elementos de una lista.
+void f_eliminar(tElemento e){
+        free(e);
+        e = NULL;
+}
+
+//Procedimiento que tiene la funcion de liberar el espacio de memoria de una entrada.
+
+void destruirEntrada(tElemento e){
+    tEntrada entrada= (tEntrada) e;
+
+    fEliminarClaves(entrada->clave);
+    fEliminarValores (entrada->valor);
+    free(entrada);
+    entrada=NULL;
 }

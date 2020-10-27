@@ -1,23 +1,9 @@
 #include <stdio.h>
 //#include <stdlib.h>
+#include <string.h>
 #include "mapeo.h"
 
-
-//Permite salir del programa.
-void salir(FILE *fp){
-    fclose(fp);
-    printf("\n");
-    printf("Programa finalizado!\n");
-    exit(0);
-}
-
-//Funciones auxiliares de lista
-void fEliminar(tElemento e){
-    free(e);
-    e = NULL;
-}
-
-//Funciones auxiliares de mapeo
+//                        Funciones auxiliares de mapeo
 void fEliminarC (void* clave){
     tClave c= (tClave) clave;
     free(c);
@@ -30,40 +16,48 @@ void fEliminarV(void* valor){
     v= NULL;
 }
 
-int fComparacion(void* p01,void* p02){
+/*  Funcion comparacion
+    Tiene como objetivo comparar dos elementos pasados por parametro.
+    Utiliza la funcion strcmp de la libreria string.
+    Retorna:
+    -0 Si las cadenas son iguales
+    -Valor positivo si la primera cadena es mayor
+    -Valor negativo si la primera cadena es menor.
 
-    int * pa;
-    pa= p01;
-    int * pb;
-    pb= p02;
-    int pos=0;
-    int primero=*pa;
-    int segundo=*pb;
-    int esigual=0;
-    while (segundo!=0&&primero!=0&&esigual!=1)
-    {
-        primero=*(pa+pos);
-        segundo=*(pb+pos);
-        if (primero!=segundo)
-            esigual=1;
-        pos++;
-    }
-    return esigual;
+*/
+int fComparacion(void* p01,void* p02){
+    int result;
+    char * pa = p01;
+    char * pb = p02;
+    result= strcmp(pa,pb);
 }
 
+/*  Funcion hash
+    Tiene como objetivo generar un codigo unico que identifica al elemento pasado por parametro
+*/
  int fHash(void* p01){
-    int * parr;
-    parr= p01;
+    char* arr= p01;
     int suma=0;
     int pos=0;
-    int primero=*parr;
+    /*int primero=*parr;
     while (primero!=0 )
     {
         primero=*(parr+pos);
         suma=suma+primero;
         pos++;
-    }
-    return  (suma/(pos-1) ) ;
+    }*/
+    return  (suma/(pos-1) );
+}
+
+//                                 Funciones de evaluador
+
+
+//Procedimiento que permite salir del programa.
+void salir(FILE *fp){
+    fclose(fp);
+    printf("\n");
+    printf("Programa finalizado!\n");
+    exit(0);
 }
 
 
