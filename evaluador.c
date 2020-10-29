@@ -98,10 +98,6 @@ int noesSeparador(char c){
     return b_esvalido;
 }
 
-/*Permite cargar en mapeo todas las palabras de archivo                 */
-void cargarArchivo(FILE* archivo, tMapeo map){
-
-}
 
 //INGRESAR CARACTERES DESDE EL ARCHIVO A UN ARREGLO (PERO QUIERO UNPUNTERO)
 /**
@@ -133,16 +129,7 @@ fclose(archivo);
 return indice;
 }
 
-//pasa una palabra al mapeo
-void pasar_aMapeo(tMapeo map,char * una_palabra){
 
-    tValor valor_x= m_recuperar(map,una_palabra);//malloc?
-    if (valor_x!=NULL)
-            valor_x= valor_x+1;
-    else valor_x=1;
-            m_insertar(map,una_palabra,valor_x);
-
-}
 
 /**
       Permite pasar palabras de un puntero a otro
@@ -212,7 +199,17 @@ int main(int argc, char *argv[]){
                             }
                         if (entra!=0)  printf("\n");
 
-                        pasar_aMapeo(map,una_palabra);
+
+                        int *valor;
+                        valor=(int*) malloc( sizeof(int) );
+                        valor[0]=(int) m_recuperar(map,una_palabra);
+                        if (valor[0]!=0)
+                              valor[0]= valor[0]+1;
+                        else
+                              valor[0]=1;
+                        m_insertar(map,una_palabra,(tValor)valor[0]);
+
+
 
 
                         inicio_palabra=fin_palabra+2;
