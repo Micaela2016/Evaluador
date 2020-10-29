@@ -1,5 +1,5 @@
 #include <stdio.h>
-//#include <stdlib.h>
+#include <stdlib.h>
 #include <string.h>
 #include "mapeo.h"
 
@@ -22,9 +22,9 @@ void fEliminarV(void* valor){
     Tiene como objetivo comparar dos elementos pasados por parametro.
     Utiliza la funcion strcmp de la libreria string.
     Retorna:
-    -0 Si las cadenas son iguales
-    -Valor positivo si la primera cadena es mayor
-    -Valor negativo si la primera cadena es menor.
+            -0 Si las cadenas son iguales
+            -Valor positivo si la primera cadena es mayor
+            -Valor negativo si la primera cadena es menor.
 */
 int fComparacion(void* p01,void* p02){
     int result;
@@ -37,7 +37,6 @@ int fComparacion(void* p01,void* p02){
     Tiene como objetivo generar un codigo unico que identifica al elemento pasado por parametro
 */
  int fHash(void* p01){
-    //char* arr= (char*) p01;
     int g = 31;
     int longitud = strlen(p01);
     int result = 0;
@@ -54,10 +53,27 @@ int fComparacion(void* p01,void* p02){
 
 //                                Funciones de evaluador
 
+/*Permite determinar si la palabra ingresada pertenece o no al archivo.Si pertenece retorna cuantas veces aparece.*/
+tValor cantApariciones (tMapeo mapeo, char* aBuscar){
+    tValor toReturn=0;
+    if(mapeo!= NULL){
+        if(mapeo->cantidad_elementos!=0){                   //Si el mapeo no esta vacio.
+
+            if(m_recuperar(mapeo, aBuscar) != NULL){          //Si la palabra pertenece al mapeo .
+                toReturn=m_recuperar(mapeo, aBuscar);
+            }
+            else {
+                toReturn=NULL;
+            }
+        }
+    }
+return toReturn;
+}
 
 /**Procedimiento que permite salir del programa.*/
-void salir(FILE *fp){
+void salir(FILE *fp, tMapeo map){
     fclose(fp);
+    m_destruir(&map, &fEliminarC, &fEliminarV);
     printf("\n");
     printf("Programa finalizado!\n");
     exit(0);
@@ -112,7 +128,7 @@ while(!feof(archivo))
 }
 pArreglo[indice]='\0';
 
-rewind(archivo);
+rewind(archivo);                                                                           // NO SE CIERRA el archivo aca
 fclose(archivo);
 return indice;
 }
@@ -124,25 +140,21 @@ int main(int argc, char *argv[]){
     tMapeo map;
     crear_mapeo(&map, 9, &fHash,&fComparacion );
 
-printf("============================================ EVALUADOR DE ARCHIVO DE CARACTERES ASCII ==========================================================\n");
+    //----------------------------------ARCHIVO---------------------------------
+    FILE* arch_ascii;
 
-   if(argc==2)
-    {
-        char* nombre_arc = argv[1];
-        FILE* arch_ascii;
-        if((arch_ascii= fopen(nombre_arc,"r"))==NULL)
-        {//ver porque devuelve null
+    if(argc <= 1){
+        printf("Falta parametros por ingresar!\n");
+        exit(0);
+    }
 
-            printf ("El archivo es archivo invalido.\n"); //Abro el archivo en modo lectura
-            return 0;
-        }
-        else
-        {
+    arch_ascii= fopen (argv[1],"r");                //Abro el archivo en modo lectura
 
-            if(feof(arch_ascii))
-                    printf("El archivo %s esta vacio\n",arch_ascii);
-            else
-            {
+    if((arch_ascii)==NULL){
+        printf ("El archivo es archivo invalido.\n");
+        exit(0);
+    }
+
 
 
                 //INGRESAR CARACTERES DESDE EL ARCHIVO A UN PUNTERO DE CHAR
@@ -199,75 +211,47 @@ printf("============================================ EVALUADOR DE ARCHIVO DE CAR
                 printf("Cantidad actual de palabras en mapeo: %d\n",map->cantidad_elementos);
                 printf("\n");
 
+//----------------------------------MENU-------------------------------------
 
-
-            }
-
-        }
-
-    }
-    else
-    {
-        printf ("Hay error en el numero de argumentos\n");
-        return 1;
-    }
-
-
-
-
-
-
-    int  salir = 0;
+    char cadena [250];
+    int  salida = 0;
     int opcion=0;
-    while (!salir){
-        printf("========== Ingrese una opcion =============\n");
-        printf("1: cantidad de apariciones de una palabra o 2: salir ");
+    while (!salida){
+        printf("                                  Menu\n");
+        printf("1: Mostrar cantidad de apariciones de una palabras\n");
+        printf("2: Salir\n");
+        printf("============= Ingrese una opcion =============\n");
 
         scanf("%d", &opcion);
         fflush(stdin);
-        if (opcion == 1|opcion == 2 ){
+
+        if (opcion == 1||opcion == 2 ){
             printf("========== =============== =============\n");
             printf("Eligio >>");
             fflush(stdin);
         }
+
         switch(opcion){
-        case 1: {
-            printf("opcion 1 \n");
+        case 1:{
+            printf("Opcion 1 \n");
             printf("Ingrese una palabra: ");
-            char *cadena;
-            cadena=(char*) malloc( sizeof(char)*50 );
-            scanf("%[^\n]",cadena);
-
-            tValor valor_rec= m_recuperar(map,cadena);
-
-            if (valor_rec==NULL)
-                    {
-                        printf("No esta la palabra: '");
-                        for (int pos_cad=0;cadena[pos_cad]!='\0';pos_cad++)
-                            {printf("%c",cadena[pos_cad]);
-                            }
-                        printf("'\n");
-
-
-                    }
-            else    {
-                       printf("Si esTa la palabra: '");
-                       for (int pos_cad=0;cadena[pos_cad]!='\0';pos_cad++)
-                            {printf("%c",cadena[pos_cad]);
-                            }
-                       printf("'\n");
-                       printf("Aparece %d veces!\n",valor_rec);
-                    }
-
-
-
+            scanf("%s",(char*)&cadena);
+            printf("\n");
+            tValor apariciones= cantApariciones (map, cadena);
+            if(apariciones != NULL){
+                int cant= (int) apariciones;
+                printf("La palabra '%s' pertenece al archivo y aparece %i veces.\n", cadena,cant);
+            }
+            else
+                printf("La palabra '%s' no pertenece al archivo!\n", cadena);
             fflush(stdin);
             break;
         }
         case 2:{
-            salir = 1;
-            printf("opcion 2>>");
+            salida = 1;
+            printf("opcion 2\n");
             printf("Eso es todo! \n");
+            salir(arch_ascii, map);
             break;
         }
         default:{
@@ -275,6 +259,8 @@ printf("============================================ EVALUADOR DE ARCHIVO DE CAR
         }
         }
     }
+
+
 
 
 }
