@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <stdlib.h>
+//#include <stdlib.h>
 #include <string.h>
 #include "mapeo.h"
 
@@ -86,7 +86,7 @@ void salir(FILE *fp, tMapeo map){
     -1 Si c no es letrra o numero(es un separador).
 */
 int noesSeparador(char c){
-    char arr_no_separador[64]={'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N(50)','O','P','Q','R','S','T','U','V','W','X','Y','Z','\0'};
+    char arr_no_separador[64]={'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','\0'};
     int b_esvalido=1;
     int pos=0;
     while (arr_no_separador[pos]!='\0'&&b_esvalido==1){
@@ -114,7 +114,7 @@ int cargarEn_pArreglo(FILE* archivo,char * pArreglo){
 
 rewind(archivo);
 int indice=0;
-char chr_valido;//int puso_separador=0;
+char chr_valido;
 while(!feof(archivo))
 {
    chr_valido=fgetc(archivo);
@@ -133,6 +133,33 @@ fclose(archivo);
 return indice;
 }
 
+//pasa una palabra al mapeo
+void pasar_aMapeo(tMapeo map,char * una_palabra){
+
+    tValor valor_x= m_recuperar(map,una_palabra);//malloc?
+    if (valor_x!=NULL)
+            valor_x= valor_x+1;
+    else valor_x=1;
+            m_insertar(map,una_palabra,valor_x);
+
+}
+
+/**
+      Permite pasar palabras de un puntero a otro
+      inicio: Indica la pocion desde donde empieza a copiar los caracteres.
+      Fin: indica la posicion hasta donde termina de copiar los caracteres.
+*/
+void Pasar_unaPalabra(int inicio,int fin, char * pArreglo,char *P_unaPalabra){
+
+    int ini=0;
+    for(int pos=inicio;pos<=fin;pos++)
+    {
+            P_unaPalabra[ini]=pArreglo[pos];
+            ini++;
+    }
+    P_unaPalabra[ini]='\0';
+
+}
 
 
 int main(int argc, char *argv[]){
@@ -174,13 +201,8 @@ int main(int argc, char *argv[]){
                         fin_palabra=i-1;
                         char *una_palabra;
                         una_palabra=(char*) malloc( sizeof(char)*(fin_palabra - inicio_palabra + 2) );
-                        int ini=0;
-                        for(int pos=inicio_palabra;pos<=fin_palabra;pos++)
-                        {
-                                *(una_palabra+ini)=p_arreglo[pos];
-                                ini++;
-                        }
-                        una_palabra[ini]='\0';
+                        Pasar_unaPalabra(inicio_palabra,fin_palabra,p_arreglo,una_palabra);
+
 
                         //Muestra todas las palabras ingresadas al map
                         int entra=0;
@@ -190,12 +212,7 @@ int main(int argc, char *argv[]){
                             }
                         if (entra!=0)  printf("\n");
 
-
-                        tValor valor_x= m_recuperar(map,una_palabra);
-                        if (valor_x!=NULL)
-                              valor_x= valor_x+1;
-                        else valor_x=1;
-                        m_insertar(map,una_palabra,valor_x);
+                        pasar_aMapeo(map,una_palabra);
 
 
                         inicio_palabra=fin_palabra+2;
